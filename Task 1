@@ -1,0 +1,52 @@
+
+import re
+
+def assess_password_strength(password):
+    """
+    Assess the strength of a given password.
+    
+    Parameters:
+    password (str): The password to assess.
+    
+    Returns:
+    str: Feedback on password strength.
+    """
+    # Check length
+    length_score = len(password)
+    
+    # Check for complexity
+    has_upper = bool(re.search(r'[A-Z]', password))
+    has_lower = bool(re.search(r'[a-z]', password))
+    has_digit = bool(re.search(r'[0-9]', password))
+    has_special = bool(re.search(r'[!@#$%^&*()_+\-=\\[\]{};:\'",.<>?/~`]', password))
+    
+    # Evaluate complexity
+    complexity_score = sum([has_upper, has_lower, has_digit, has_special])
+    
+    # Check for uniqueness
+    common_passwords = set([
+        "123456", "password", "123456789", "12345678", "12345",
+        "qwerty", "abc123", "password1", "1234567", "letmein"
+    ])
+    is_common = password.lower() in common_passwords
+    
+    # Determine strength
+    if length_score >= 12 and complexity_score == 4 and not is_common:
+        return "Password strength: Very Strong"
+    elif length_score >= 8 and complexity_score >= 3 and not is_common:
+        return "Password strength: Strong"
+    elif length_score >= 6 and complexity_score >= 2 and not is_common:
+        return "Password strength: Moderate"
+    elif length_score >= 6 and complexity_score < 2 and not is_common:
+        return "Password strength: Weak"
+    else:
+        return "Password strength: Very Weak"
+
+def main():
+    print("Welcome to the Password Strength Checker!")
+    password = input("Please enter your password to check its strength: ")
+    strength = assess_password_strength(password)
+    print(strength)
+
+if __name__ == "__main__":
+    main()
